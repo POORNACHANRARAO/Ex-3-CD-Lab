@@ -11,7 +11,9 @@ To write a yacc program to recognize a valid arithmetic expression that uses ope
 6.	Compile the yacc program with yacc compiler to produce output file as y.tab.c. eg $ yacc –d arith_id.y
 7.	Compile these with the C compiler as gcc lex.yy.c y.tab.c
 8.	Enter an arithmetic expression as input and the tokens are identified as output.
+
 # PROGRAM
+
 FILENAME.Y
 
 
@@ -34,40 +36,40 @@ int yylex(void);
 
 expr: expr '+' term
 
-| expr '-' term
+     | expr '-' term
 
-| term
+     | term
 
-;
+     ;
 
 term: term '*' factor
 
-| term '/' factor
+     | term '/' factor
 
-| factor
+     | factor
 
-;
+     ;
 
 factor: '(' expr ')'
 
-| NUMBER
+     | NUMBER
 
-;
+     ;
 
 %%
 
 void yyerror(const char *s) {
 
-printf("Invalid arithmetic expression.\n");
+     printf("Invalid arithmetic expression.\n");
 }
 
 int main() {
 
-printf("Enter an arithmetic expression: ");
+        printf("Enter an arithmetic expression: ");
 
-if (yyparse() == 0)
+        if (yyparse() == 0)
 
-printf("Valid arithmetic expression.\n");
+       printf("Valid arithmetic expression.\n");
 
 return 0;
 }
@@ -84,21 +86,22 @@ digit [0-9]
 
 %%
 
-[ \t\n]+ ; // Ignore whitespace
+ [ \t\n]+        ;// Ignore whitespace
+ 
+ {digit}+        { yylval = atoi(yytext); return NUMBER; }
+ 
+ [\+\-\*/]       { return *yytext; }
+  
+  \(             { return '('; }
+  
+  \)             { return ')'; }
+  
+  .              { return 0; }
+  
+  %%
+  
+  int yywrap() { return 1; }
 
-{digit}+ { yylval = atoi(yytext); return NUMBER; }
-
-[\+\-\*/] { return *yytext; }
-
-\( { return '('; }
-
-\) { return ')'; }
-
-. { return 0; }
-
-%%
-
-int yywrap() { return 1; }
 # OUTPUT
 <img width="826" height="632" alt="Screenshot 2025-10-15 112021" src="https://github.com/user-attachments/assets/d749ba95-6d72-4dda-8405-4f4ebc4be570" />
 
